@@ -1,0 +1,42 @@
+{
+  "name": "@maptex/react-mapboxgl",
+  "version": "0.1.0",
+  "description": "A React components for mapbox-gl-js",
+  "main": "dist-lib/index.js",
+  "module": "dist-lib-esm/index.js",
+  "typings": "dist-lib/index.d.ts",
+  "scripts": {
+    "build": "npm run lint && npm run test && npm run build:commonjs && npm run build:esm",
+    "build:commonjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig-esm.json",
+    "build:watch": "tsc --watch"
+  },
+  "files": [
+    "dist-lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MapTex/MapTex-API-for-React.git"
+  },
+  "keywords": [
+    "mapbox",
+    "react",
+    "map",
+    "webgl",
+    "mapbox-gl",
+    "react-component"
+  ],
+  "author": "panzhuoran",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MapTex/MapTex-API-for-React/issues"
+  },
+  "homepage": "https://github.com/MapTex/MapTex-API-for-React#readme",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {}
+}
