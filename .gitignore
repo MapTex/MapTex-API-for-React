@@ -1,0 +1,16 @@
+.DS_Store
+.vscode
+
+vendor/
+lib/
+lib-esm/
+dist/
+es/
+www/
+node_modules/
+bundle.js
+npm-debug.log
+package-lock.json
+yarn.lock
+yarn-error.log
+.env
