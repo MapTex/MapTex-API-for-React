@@ -1,6 +1,6 @@
-import Map from './map';
+import Mapbox from './map';
 import { Context } from './map-context';
 
-export { Map, Context };
+export { Mapbox, Context };
 
-export default Map;
+export default Mapbox;

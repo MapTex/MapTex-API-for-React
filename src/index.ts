@@ -1,3 +1,3 @@
-import Map from './map';
+import Mapbox from './map';
 
-export { Map };
+export { Mapbox };

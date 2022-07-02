@@ -2,9 +2,9 @@
   "name": "@maptex/react-mapboxgl",
   "version": "1.0.0",
   "description": "A React components for mapbox-gl-js",
-  "main": "dist-lib/index.js",
-  "module": "dist-lib-esm/index.js",
-  "typings": "dist-lib/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "tslint --project tsconfig.json",
@@ -13,7 +13,7 @@
     "build:commonjs": "tsc -p tsconfig.json",
     "build:esm": "tsc -p tsconfig-esm.json",
     "build:watch": "tsc --watch",
-    "test-parse": "node test/parsepbf.js"
+    "test-parse": "node shell/parsepbf.js"
   },
   "files": [
     "dist-lib",
@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/MapTex/MapTex-API-for-React#readme",
   "dependencies": {
+    "@maptex/mapbox-gl": "^1.0.0",
     "deep-equal": "^2.0.5",
     "mapbox-gl": "^2.9.1",
     "pbf": "^3.2.1",

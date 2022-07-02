@@ -1,4 +1,4 @@
-import * as MapboxGl from 'mapbox-gl';
+import * as MapboxGl from '@maptex/mapbox-gl';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 
@@ -10,8 +10,7 @@ import { Environment, Props, State } from './map-options';
 
 import { Events, listenEvents, events, Listeners } from './map-events';
 
-const DefaultZoom = 2;
-// const DefaultCenter = [110, 30];
+let isinitial = false;
 
 // tslint:disable-next-line:no-namespace
 declare global {
@@ -23,7 +22,10 @@ declare global {
   }
 }
 
-export class Map extends React.Component<Environment & Props & Events, State> {
+export class Mapbox extends React.Component<
+  Environment & Props & Events,
+  State
+> {
   public state: State = {
     map: undefined,
     ready: false,
@@ -34,60 +36,60 @@ export class Map extends React.Component<Environment & Props & Events, State> {
   // tslint:disable-next-line:variable-name
   public _isMounted = true;
 
-  public container?: HTMLElement;
+  private container: HTMLElement | undefined;
 
-  public componentDisMount() {
+  public componentDidMount() {
     const {
       accessToken,
       apiUrl,
 
-      antialias,
-      attributionControl,
-      bearing,
-      bearingSnap,
-      bounds,
-      boxZoom,
-      center,
-      clickTolerance,
-      collectResourceTiming,
-      container,
-      cooperativeGestures,
-      crossSourceCollisions,
+      antialias = false,
+      attributionControl = true,
+      bearing = 0,
+      bearingSnap = 7,
+      bounds = [-180, -90, 180, 90],
+      boxZoom = true,
+      center = [110, 30],
+      clickTolerance = 3,
+      collectResourceTiming = false,
+      // container,
+      // cooperativeGestures,
+      crossSourceCollisions = true,
       customAttribution,
-      doubleClickZoom,
-      dragPan,
-      dragRotate,
-      fadeDuration,
-      failIfMajorPerformanceCaveat,
-      fitBoundsOptions,
-      hash,
-      interactive,
-      keyboard,
+      doubleClickZoom = true,
+      dragPan = true,
+      dragRotate = true,
+      fadeDuration = 300,
+      failIfMajorPerformanceCaveat = false,
+      // fitBoundsOptions,
+      hash = false,
+      interactive = true,
+      keyboard = true,
       locale,
-      localFontFamily,
-      localIdeographFontFamily,
-      logoPosition,
+      localFontFamily = 'false',
+      localIdeographFontFamily = 'sans-serif',
+      logoPosition = 'bottom-left',
       maxBounds,
-      maxPitch,
+      maxPitch = 60,
       maxTileCacheSize,
-      maxZoom,
-      minPitch,
-      minZoom,
-      optimizeForTerrain,
-      pitch,
-      pitchWithRotate,
-      preserveDrawingBuffer,
-      projection,
-      refreshExpiredTiles,
-      renderWorldCopies,
-      scrollZoom,
-      style,
-      testMode,
-      touchPitch,
-      touchZoomRotate,
-      trackResize,
+      maxZoom = 22,
+      minPitch = 0,
+      minZoom = 0,
+      optimizeForTerrain = true,
+      pitch = 0,
+      pitchWithRotate = true,
+      preserveDrawingBuffer = false,
+      projection = { name: 'mercator' },
+      refreshExpiredTiles = true,
+      renderWorldCopies = true,
+      scrollZoom = true,
+      mapStyle,
+      testMode = false,
+      touchPitch = true,
+      touchZoomRotate = true,
+      trackResize = true,
       transformRequest,
-      zoom = DefaultZoom,
+      zoom = 2,
 
       onStyleLoad,
     } = this.props;
@@ -99,6 +101,10 @@ export class Map extends React.Component<Environment & Props & Events, State> {
       (MapboxGl as any).config.API_URL = apiUrl;
     }
 
+    const containerid = this.container
+      ? this.container.id
+      : 'maptex-default-map-id';
+
     const options: MapboxGl.MapboxOptions = {
       antialias,
       attributionControl,
@@ -109,8 +115,8 @@ export class Map extends React.Component<Environment & Props & Events, State> {
       center,
       clickTolerance,
       collectResourceTiming,
-      container,
-      cooperativeGestures,
+      container: containerid,
+      // cooperativeGestures,
       crossSourceCollisions,
       customAttribution,
       doubleClickZoom,
@@ -118,7 +124,7 @@ export class Map extends React.Component<Environment & Props & Events, State> {
       dragRotate,
       fadeDuration,
       failIfMajorPerformanceCaveat,
-      fitBoundsOptions,
+      // fitBoundsOptions,
       hash,
       interactive,
       keyboard,
@@ -140,7 +146,7 @@ export class Map extends React.Component<Environment & Props & Events, State> {
       refreshExpiredTiles,
       renderWorldCopies,
       scrollZoom,
-      style,
+      style: mapStyle,
       testMode,
       touchPitch,
       touchZoomRotate,
@@ -151,23 +157,26 @@ export class Map extends React.Component<Environment & Props & Events, State> {
 
     let map = this.state.map;
 
-    if (!map) {
+    if (!map && !isinitial) {
       map = new MapboxGl.Map(options);
       this.setState({ map });
+      isinitial = true;
     }
 
-    // tslint:disable-next-line:no-any
-    map.on('load', (evt: React.SyntheticEvent<any>) => {
-      if (this._isMounted) {
-        this.setState({ ready: true });
-      }
+    if (map) {
+      // tslint:disable-next-line:no-any
+      map.on('load', (evt: React.SyntheticEvent<any>) => {
+        if (this._isMounted) {
+          this.setState({ ready: true });
+        }
 
-      if (onStyleLoad) {
-        onStyleLoad(map!, evt);
-      }
-    });
+        if (onStyleLoad) {
+          onStyleLoad(map!, evt);
+        }
+      });
 
-    this.listeners = listenEvents(events, this.props, map);
+      this.listeners = listenEvents(events, this.props, map);
+    }
   }
 
   public componentWillUnmount() {
@@ -185,8 +194,8 @@ export class Map extends React.Component<Environment & Props & Events, State> {
       return null;
     }
 
-    if (!isEqual(prevProps.style, this.props.style)) {
-      map.setStyle(this.props.style);
+    if (!isEqual(prevProps.mapStyle, this.props.mapStyle)) {
+      map.setStyle(this.props.mapStyle);
     }
 
     return null;
@@ -197,8 +206,12 @@ export class Map extends React.Component<Environment & Props & Events, State> {
   };
 
   public render() {
-    const { containerStyle, className, children, renderChildrenInPortal } =
-      this.props;
+    const {
+      containerStyle,
+      className = 'maptex-default-map-class',
+      children,
+      renderChildrenInPortal,
+    } = this.props;
 
     const { ready, map } = this.state;
 
@@ -223,11 +236,7 @@ export class Map extends React.Component<Environment & Props & Events, State> {
 
     return (
       <Context.Provider value={map}>
-        <div
-          ref={this.setRef}
-          className={className}
-          style={{ ...containerStyle }}
-        >
+        <div ref={this.setRef} id="maptex-default-map-id" className={className}>
           {ready && children}
         </div>
       </Context.Provider>
@@ -235,4 +244,4 @@ export class Map extends React.Component<Environment & Props & Events, State> {
   }
 }
 
-export default Map;
+export default Mapbox;

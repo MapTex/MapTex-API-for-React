@@ -73,10 +73,10 @@ export interface Props {
   bearingSnap?: number;
   bounds?: LngLatBoundsLike;
   boxZoom?: boolean;
-  center?: LngLatLike
+  center?: LngLatLike;
   clickTolerance?: number;
   collectResourceTiming?: boolean;
-  container: HTMLElement | string;
+  // container: HTMLElement | string;
   cooperativeGestures?: boolean;
   crossSourceCollisions?: boolean;
   customAttribution?: string | string[];
@@ -107,7 +107,7 @@ export interface Props {
   refreshExpiredTiles?: boolean;
   renderWorldCopies?: boolean;
   scrollZoom?: boolean | object;
-  style: string | MapboxGl.Style;
+  mapStyle: string | MapboxGl.Style;
   testMode?: boolean;
   touchPitch?: boolean | object;
   touchZoomRotate?: boolean | object;
@@ -116,7 +116,7 @@ export interface Props {
   zoom?: number | undefined;
 
   className?: string;
-  containerStyle: React.CSSProperties;
+  containerStyle?: React.CSSProperties;
   renderChildrenInPortal?: boolean;
   children?: JSX.Element | JSX.Element[];
 }
