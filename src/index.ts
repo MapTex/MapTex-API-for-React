@@ -1,3 +1,7 @@
 import Mapbox from './map';
 
-export { Mapbox };
+import StreamLayer from './layer/streamlayer';
+
+import { withMap, Context } from './map/map-context';
+
+export { Mapbox, StreamLayer, withMap, Context };

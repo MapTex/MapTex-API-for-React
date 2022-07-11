@@ -33,10 +33,19 @@ export class Mapbox extends React.Component<
 
   public listeners: Listeners = {};
 
-  // tslint:disable-next-line:variable-name
-  public _isMounted = true;
-
   private container: HTMLElement | undefined;
+
+  // tslint:disable-next-line:no-any
+  private handleLoad(evt: React.SyntheticEvent<any>) {
+    const { map } = this.state;
+    const { onStyleLoad } = this.props;
+
+    this.setState({ ready: true });
+
+    if (onStyleLoad) {
+      onStyleLoad(map!, evt);
+    }
+  }
 
   public componentDidMount() {
     const {
@@ -90,8 +99,6 @@ export class Mapbox extends React.Component<
       trackResize = true,
       transformRequest,
       zoom = 2,
-
-      onStyleLoad,
     } = this.props;
 
     // tslint:disable-next-line:no-any
@@ -164,16 +171,7 @@ export class Mapbox extends React.Component<
     }
 
     if (map) {
-      // tslint:disable-next-line:no-any
-      map.on('load', (evt: React.SyntheticEvent<any>) => {
-        if (this._isMounted) {
-          this.setState({ ready: true });
-        }
-
-        if (onStyleLoad) {
-          onStyleLoad(map!, evt);
-        }
-      });
+      map.on('load', this.handleLoad.bind(this));
 
       this.listeners = listenEvents(events, this.props, map);
     }
@@ -181,7 +179,6 @@ export class Mapbox extends React.Component<
 
   public componentWillUnmount() {
     const { map } = this.state;
-    this._isMounted = false;
 
     if (map) {
       map.remove();
