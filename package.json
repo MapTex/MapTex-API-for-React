@@ -1,6 +1,6 @@
 {
   "name": "@maptex/react-mapboxgl",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A React components for mapbox-gl-js",
   "main": "lib/index.js",
   "module": "lib-esm/index.js",
