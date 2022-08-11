@@ -4,10 +4,11 @@ import * as MapboxGl from 'mapbox-gl';
 export type MapEvent = (
   map: MapboxGl.Map,
   // tslint:disable-next-line:no-any
-  event: React.SyntheticEvent<any>,
+  event?: React.SyntheticEvent<any>,
 ) => void;
 
 export interface Events {
+  onMapLoad?: MapEvent;
   onStyleLoad?: MapEvent;
   onResize?: MapEvent;
   onDblClick?: MapEvent;

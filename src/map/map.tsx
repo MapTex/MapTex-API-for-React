@@ -99,6 +99,8 @@ export class Mapbox extends React.Component<
       trackResize = true,
       transformRequest,
       zoom = 2,
+
+      onMapLoad,
     } = this.props;
 
     // tslint:disable-next-line:no-any
@@ -167,6 +169,9 @@ export class Mapbox extends React.Component<
     if (!map && !isinitial) {
       map = new MapboxGl.Map(options);
       this.setState({ map });
+      if (onMapLoad) {
+        onMapLoad(map);
+      }
       isinitial = true;
     }
 
