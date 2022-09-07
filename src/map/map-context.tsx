@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as MapboxGl from 'mapbox-gl';
+import * as MapboxGl from '@maptex/mapbox-gl';
 
 // const mapinstance = undefined; // new MapboxGl.Map();
 export const Context = React.createContext(undefined) as React.Context<

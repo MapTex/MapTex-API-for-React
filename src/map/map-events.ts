@@ -1,5 +1,5 @@
 import React from 'react';
-import * as MapboxGl from 'mapbox-gl';
+import * as MapboxGl from '@maptex/mapbox-gl';
 
 export type MapEvent = (
   map: MapboxGl.Map,

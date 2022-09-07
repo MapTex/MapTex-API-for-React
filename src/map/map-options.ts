@@ -1,4 +1,4 @@
-import * as MapboxGl from 'mapbox-gl';
+import * as MapboxGl from '@maptex/mapbox-gl';
 
 export interface PaddingOptions {
   top: number;
@@ -118,7 +118,9 @@ export interface Props {
   className?: string;
   containerStyle?: React.CSSProperties;
   renderChildrenInPortal?: boolean;
-  children?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[] | boolean;
+
+  extendIcons?: { [key: string]: string } | undefined;
 }
 
 export interface State {

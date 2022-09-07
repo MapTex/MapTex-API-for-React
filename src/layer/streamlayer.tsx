@@ -50,6 +50,14 @@ function StreamLayer(props: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!filter) {
+      map.setFilter(id, ['all']);
+    } else {
+      map.setFilter(id, filter);
+    }
+  }, [filter]);
+
   /* useEffect(() => {
     if (paint) {
       Object.keys(paint).forEach((key) => {
@@ -81,14 +89,6 @@ function StreamLayer(props: Props) {
       }
     };
   }, [layout]);
-
-  useEffect(() => {
-    if (!filter) {
-      map.setFilter(id, ['all']);
-    } else {
-      map.setFilter(id, filter);
-    }
-  }, [filter]);
 
   useEffect(() => {
     map.moveLayer(id, before);

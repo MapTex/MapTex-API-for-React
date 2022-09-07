@@ -10,6 +10,8 @@ import { Environment, Props, State } from './map-options';
 
 import { Events, listenEvents, events, Listeners } from './map-events';
 
+import mapEventBus, { LayerVisible } from '../eventbus/module/map';
+
 let isinitial = false;
 
 // tslint:disable-next-line:no-namespace
@@ -35,12 +37,53 @@ export class Mapbox extends React.Component<
 
   private container: HTMLElement | undefined;
 
+  private bindEventBus() {
+    /* mapEventBus.on('onMapLoad', () => {});
+    mapEventBus.on('onMapIdle', () => {});
+    mapEventBus.on('onMapChangeLayerVisible', (payload: LayerVisible) => {}); */
+  }
+
+  private addExtendIcons(icons: { [key: string]: string }, callback: () => void) {
+    const { map } = this.state;
+    if (!map) return;
+    const pros = Object.keys(icons).map(k => this.addIcon(k, icons[k]));
+    Promise.all(pros).then(res => {
+      // tslint:disable-next-line:no-any
+      res.forEach((r: any) => {
+        const { name, image } = r;
+        map.addImage(name, image);
+      });
+      if (callback) { callback() }
+    });
+  }
+
+  private addIcon(name: string, url: string) {
+    const { map } = this.state;
+    const promise = new Promise((res, rej) => {
+      if (map) {
+        map.loadImage(
+          url,
+          (error, image) => {
+            if (error) throw error;
+            res({ name, image });
+          });
+      }
+    });
+    return promise;
+  }
+
   // tslint:disable-next-line:no-any
   private handleLoad(evt: React.SyntheticEvent<any>) {
+    // tslint:disable-next-line:no-this-assignment
+    const vm = this;
     const { map } = this.state;
-    const { onStyleLoad } = this.props;
+    const { onStyleLoad, extendIcons } = this.props;
 
-    this.setState({ ready: true });
+    if (extendIcons) {
+      this.addExtendIcons(extendIcons, () => { vm.setState({ ready: true }) });
+    } else {
+      this.setState({ ready: true });
+    }
 
     if (onStyleLoad) {
       onStyleLoad(map!, evt);
@@ -180,6 +223,8 @@ export class Mapbox extends React.Component<
 
       this.listeners = listenEvents(events, this.props, map);
     }
+
+    this.bindEventBus();
   }
 
   public componentWillUnmount() {
